@@ -3,13 +3,6 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-
-var _Event = require('./Event');
-
-var _Event2 = _interopRequireDefault(_Event);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 class Exchange {
     constructor(conn, name, options, exchange) {
         this.connId = conn.id;
@@ -112,6 +105,25 @@ class Exchange {
         } catch (e) {
             this.conn.emit('error', e);
         }
+    }
+
+    getState() {
+        const exchanges = [];
+        const headers = [];
+        for (const key in this.exchanges) {
+            exchanges.push(this.exchanges[key]);
+        }
+        for (const key in this.headers) {
+            headers.push(this.headers[key]);
+        }
+
+        return {
+            name: this.name,
+            bindings: {
+                exchanges: exchanges,
+                headers: headers
+            }
+        };
     }
 }
 exports.default = Exchange;

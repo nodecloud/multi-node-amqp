@@ -29,6 +29,9 @@ export default class Connection extends EventEmitter {
         this.conn.on('error', this.onErrorCallback.bind(this));
     }
 
+    /**
+     * inner method
+     */
     onReadyCallback() {
         this.emit('ready', this);
         this.status = 'available';
@@ -58,9 +61,22 @@ export default class Connection extends EventEmitter {
         }
     }
 
+    /**
+     * inner method
+     *
+     * @param e
+     */
     onErrorCallback(e) {
         this.emit('connectionError', e);
         this.status = 'error';
+    }
+
+    getQueue(name) {
+        return this.queues[name];
+    }
+
+    getExchange(name) {
+        return this.exchanges[name];
     }
 
     /**
@@ -155,5 +171,23 @@ export default class Connection extends EventEmitter {
         this.exchanges = {};
         this.conn.disconnect();
         connManager.destroy(this.id);
+    }
+
+    getState() {
+        const queues = [];
+        const exchanges = [];
+        for (const key in this.queues) {
+            queues.push(this.queues[key].getState());
+        }
+        for (const key in this.exchanges) {
+            exchanges.push(this.exchanges[key].getState());
+        }
+
+        return {
+            id: this.id,
+            status: this.status,
+            queues: queues,
+            exchanges: exchanges
+        }
     }
 }

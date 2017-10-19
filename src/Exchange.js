@@ -1,5 +1,3 @@
-import event from './Event';
-
 export default class Exchange {
     constructor(conn, name, options, exchange) {
         this.connId = conn.id;
@@ -101,6 +99,25 @@ export default class Exchange {
             this.conn.destroyExchange(this.name);
         } catch (e) {
             this.conn.emit('error', e);
+        }
+    }
+
+    getState() {
+        const exchanges = [];
+        const headers = [];
+        for (const key in this.exchanges) {
+            exchanges.push(this.exchanges[key]);
+        }
+        for (const key in this.headers) {
+            headers.push(this.headers[key]);
+        }
+
+        return {
+            name: this.name,
+            bindings: {
+                exchanges: exchanges,
+                headers: headers
+            }
         }
     }
 }

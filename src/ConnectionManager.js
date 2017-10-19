@@ -31,11 +31,11 @@ export function destroyAll() {
 }
 
 export function getAvailableConnections() {
-    const connections = [];
+    const conns = [];
     for (const key in connections) {
-        connections.push(connections[key]);
+        conns.push(connections[key]);
     }
-    return connections;
+    return conns;
 }
 
 export function getAvailableConnectionIds() {

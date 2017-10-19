@@ -63,7 +63,7 @@ class Queue {
     bind(exchange, routing) {
         if (!this.exchanges[`${exchange}-${routing}`]) {
             this.queue.bind(exchange, routing, _ => {
-                this.exchanges[`${exchange}-${routing}`] = { exchange, routing };
+                this.exchanges[`${exchange}-${routing}`] = { name: exchange, routing };
             });
         }
     }
@@ -80,7 +80,7 @@ class Queue {
     bindHeaders(exchange, routing) {
         if (!this.headers[`${exchange}-${routing}`]) {
             this.queue.bind_headers(exchange, routing, _ => {
-                this.headers[`${exchange}-${routing}`] = { exchange, routing };
+                this.headers[`${exchange}-${routing}`] = { name: exchange, routing };
             });
         }
     }
@@ -152,6 +152,26 @@ class Queue {
         this.listeners = [];
         this.queue.destroy(options);
         this.conn.destroyQueue(this.name);
+    }
+
+    getState() {
+        const exchanges = [];
+        const headers = [];
+        for (const key in this.exchanges) {
+            exchanges.push(this.exchanges[key]);
+        }
+        for (const key in this.headers) {
+            headers.push(this.headers[key]);
+        }
+
+        return {
+            name: this.name,
+            bindings: {
+                exchanges: exchanges,
+                headers: headers
+            },
+            subscriptions: this.listeners.length
+        };
     }
 }
 exports.default = Queue;

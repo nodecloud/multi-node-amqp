@@ -1,6 +1,7 @@
 import MultiAMQP from '../../src/MultiAMQP';
 
 const connectionConfig = {
+    id: 'test-2',
     options: {
         host: 'localhost',
         port: 5672,
@@ -16,13 +17,18 @@ const connectionConfig = {
 };
 
 export async function start() {
-    const conn = await MultiAMQP.createConnection('test-1', connectionConfig.options, connectionConfig.extra);
+    const result = await MultiAMQP.createConnections([connectionConfig]);
+    const conn = result.connections[connectionConfig.id];
     conn.on('ready', _ => console.log('connection has been available'));
     conn.on('connectionError', e => console.error(e));
     const exchange = await getExchange(conn);
     const queue = await getQueue(conn);
     exchange.publish('test-routing-key', 'hello message test.');
     console.log('publish a message to test-publish-exchange success.');
+
+    setInterval(() => {
+        console.log('state: ', JSON.stringify(MultiAMQP.getState()));
+    }, 3000);
 }
 
 async function getExchange(conn) {

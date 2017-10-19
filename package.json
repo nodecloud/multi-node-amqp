@@ -2,7 +2,7 @@
   "name": "multi-amqp",
   "version": "0.0.1",
   "description": "a multi-end amqp client for node",
-  "main": "index.js",
+  "main": "build/MultiAMQP.js",
   "scripts": {
     "build": "babel src -d build",
     "test": "NODE_ENV=development nyc ava ./test/*.test.js"
@@ -21,8 +21,7 @@
   "license": "MIT",
   "dependencies": {
     "amqp": "^0.2.6",
-    "lodash": "^4.17.4",
-    "rxjs": "^5.4.3"
+    "lodash": "^4.17.4"
   },
   "devDependencies": {
     "ava": "^0.22.0",
